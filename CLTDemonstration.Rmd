@@ -1,0 +1,110 @@
+---
+title: "CLTDemonstration"
+author: "Marc Naples"
+date: "October 24, 2016"
+output: html_document
+keep_md: true
+---
+
+#Introduction
+This is a demonstration of the Central Limit Theorem by means of using bootstrap code for normal and exponential distributions.
+
+##Normal Distributions
+###Sample Size of 20
+We will begin by demonstrating effects within normal distributions. First, we create a random normal distribution with 20 observations, and store the mean and standard deviation of this "x1" vector.
+```{r}
+x1 <- rnorm(20)
+x1bar <- mean(x1)
+x1std <- sd(x1)
+```
+Once we have this distribution vector stored, we will run a bootstrap loop. This loop will run 1,000 iterations, each randomly sampling 20 variables from the original population vector. At the end of each iteration, it will take the mean of the new random sample, and store it as a variable in the vector bootnorm1. When finished, bootnorm1 will have 1,000 observations.
+
+```{r}
+nsims <- 1000
+bootnorm1 <- numeric(nsims)
+for (i in 1:nsims) {
+  temp <- sample(x1, 20, replace=TRUE)
+  bootnorm1[i] <- mean(temp)
+}
+```
+The Central Limit theorem tells us that for any population, if we keep talking samples, the combination of the samples themselves will create a normal distribution with the same mean as the original population (x1bar), and a standard deviation of the original standard deviation(x1std) divided by the square root of the sample size. We can verify that this occurred by looking at the statistics of bootnorm1.
+
+```{r}
+x1bar
+summary(bootnorm1)
+hist(bootnorm1)
+sd(bootnorm1)
+
+x1std/sqrt(20)
+```
+Here we see the Central Limit Theorem has been successfully demonstrated. The mean of bootnorm1 is approximately equal to the mean of X1. This histogram shows a normal distribution, and the final calculation shows that the standard deviation of bootnorms is equal to the formula laid out in the Central Limit Theorem explained in the previous paragraph.
+
+###Sample Size of 100
+Looking at the statistics above, we can see that the mean of bootnorm1 and x1 weren't quite equal. The same can be said of the standard deviation of bootnorm1 and theorized statistic from the Central Limit Theorem. Increasing the sample size should make these calculations more accurate. Next, we will repeat the process with a sample size of 100.
+```{r}
+x2 <- rnorm(100)
+x2bar <- mean(x2)
+x2std <- sd(x2)
+
+
+nsims <- 1000
+bootnorm2 <- numeric(nsims)
+for (i in 1:nsims) {
+  temp <- sample(x2, 100, replace=TRUE)
+  bootnorm2[i] <- mean(temp)
+}
+
+x2bar
+summary(bootnorm2)
+hist(bootnorm2)
+sd(bootnorm2)
+
+x2std/sqrt(100)
+```
+As we would expect, the statistics from the bootstrapped vector, bootnorm2, are approaching the true parameters and theorized calculations as we increase the sample size.
+
+##Exponential Distributions
+We can also demonstrate the Central Limit Theorem on exponential distributions. This is noteworthy because in an exponential distribution, the original population is not normally distributed.
+```{r}
+x3 <- rexp(20)
+x3bar <- mean(x3)
+x3std <- sd(x3)
+
+
+nsims <- 1000
+bootnorm3 <- numeric(nsims)
+for (i in 1:nsims) {
+  temp <- sample(x3, 20, replace=TRUE)
+  bootnorm3[i] <- mean(temp)
+}
+
+x3bar
+summary(bootnorm3)
+hist(bootnorm3)
+sd(bootnorm3)
+
+x3std/sqrt(20)
+```
+The above code and output shows the Central Limit Theorem in effect. Even though the original population is not normally distributed, a distribution or random sample means becomes normal, while approaching the population mean.
+
+While the above code works on a sample size of 20, we should be able to get even more accurate statistics by increasing the sample size to 100. As a final step, we will do so, and examine the results.
+```{r}
+x4 <- rexp(100)
+x4bar <- mean(x4)
+x4std <- sd(x4)
+x4bar
+
+nsims <- 1000
+bootnorm4 <- numeric(nsims)
+for (i in 1:nsims) {
+  temp <- sample(x4, 100, replace=TRUE)
+  bootnorm4[i] <- mean(temp)
+}
+
+x4bar
+summary(bootnorm4)
+hist(bootnorm4)
+sd(bootnorm4)
+
+x4std/sqrt(100)
+```
